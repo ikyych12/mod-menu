@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>modern login · ikyy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #1a1a2e);
+            background-size: 400% 400%;
+            animation: gradientShift 12s ease infinite;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* kredit kecil */
+        .credit-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.4);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(4px);
+            padding: 6px 16px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 25px -10px rgba(0,0,0,0.5);
+            z-index: 10;
+            transition: 0.3s;
+        }
+        .credit-badge:hover {
+            color: rgba(255, 255, 255, 0.8);
+            border-color: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* container utama */
+        .login-wrapper {
+            width: 100%;
+            max-width: 440px;
+            padding: 0 24px;
+            z-index: 5;
+        }
+
+        /* kartu login premium */
+        .glass-card {
+            background: rgba(20, 20, 35, 0.6);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 48px;
+            padding: 48px 40px;
+            box-shadow: 0 40px 70px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+            transition: transform 0.3s ease, box-shadow 0.4s ease;
+            animation: floatIn 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .glass-card:hover {
+            box-shadow: 0 50px 90px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            transform: translateY(-6px);
+        }
+
+        @keyframes floatIn {
+            0% { opacity: 0; transform: translateY(40px) scale(0.96); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* judul / brand */
+        .brand {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+        .brand h1 {
+            font-weight: 600;
+            font-size: 2.4rem;
+            background: linear-gradient(135deg, #ffffff, #c5b9ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+        }
+        .brand span {
+            display: inline-block;
+            margin-top: 8px;
+            font-size: 0.75rem;
+            color: rgba(220, 210, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 6px;
+        }
+
+        /* form group */
+        .input-group {
+            margin-bottom: 28px;
+            position: relative;
+        }
+        .input-group label {
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(210, 200, 255, 0.7);
+            margin-bottom: 8px;
+            margin-left: 12px;
+            font-weight: 400;
+        }
+        .input-group input {
+            width: 100%;
+            background: rgba(10, 8, 22, 0.5);
+            border: 1.5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 40px;
+            padding: 18px 24px;
+            font-size: 1.1rem;
+            color: white;
+            outline: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        .input-group input:focus {
+            border-color: #a68eff;
+            background: rgba(20, 15, 35, 0.7);
+            box-shadow: 0 0 20px rgba(166, 142, 255, 0.4), 0 8px 20px rgba(0,0,0,0.5);
+        }
+        .input-group input::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+            font-weight: 300;
+            font-size: 0.95rem;
+        }
+
+        /* tombol login glow + hover */
+        .login-btn {
+            width: 100%;
+            background: linear-gradient(145deg, #4a3f7c, #2d2658);
+            border: none;
+            border-radius: 40px;
+            padding: 18px 28px;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            margin-top: 16px;
+            position: relative;
+            z-index: 2;
+        }
+        .login-btn:hover {
+            background: linear-gradient(145deg, #5f52a3, #3f3770);
+            box-shadow: 0 0 25px #b6a2ff, 0 15px 30px -5px #000000cc;
+            transform: scale(1.02);
+            letter-spacing: 3px;
+        }
+        .login-btn:active {
+            transform: scale(0.98);
+            background: linear-gradient(145deg, #3a2f62, #26204a);
+        }
+
+        /* overlay gelap full screen */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(5, 3, 15, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* spinner kustom (tanpa library) */
+        .spinner {
+            width: 70px;
+            height: 70px;
+            border: 6px solid rgba(255, 255, 255, 0.05);
+            border-top: 6px solid #b39eff;
+            border-right: 6px solid #a27bff;
+            border-radius: 50%;
+            animation: spin 1.2s cubic-bezier(0.6, 0.2, 0.4, 1) infinite;
+            box-shadow: 0 0 30px #7f63e0, 0 0 10px #4d3e9b inset;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* pesan device tidak mendukung - updated */
+        .message-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            opacity: 0;
+            transition: opacity 1.2s ease;
+            pointer-events: none;
+            width: 90%;
+            max-width: 800px;
+        }
+        .message-box.fade-in {
+            opacity: 1;
+        }
+        .message-box h2 {
+            font-size: clamp(2.2rem, 10vw, 4.5rem);
+            font-weight: 800;
+            background: linear-gradient(130deg, #ffd6b0, #ffb8d1, #b7b0ff, #a0d2ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            line-height: 1.3;
+            text-shadow: 0 0 40px rgba(255, 180, 200, 0.7);
+            animation: softGlow 2s infinite alternate;
+            margin-bottom: 20px;
+        }
+        @keyframes softGlow {
+            0% { filter: drop-shadow(0 0 15px #b7a0ff); }
+            100% { filter: drop-shadow(0 0 40px #ffb3d1); }
+        }
+        
+        /* subtext tambahan untuk pesan lebih panjang */
+        .message-sub {
+            font-size: clamp(1rem, 4vw, 1.6rem);
+            color: rgba(255, 255, 255, 0.7);
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            padding: 15px 30px;
+            border-radius: 60px;
+            display: inline-block;
+            border: 1px solid rgba(255,255,255,0.1);
+            letter-spacing: 1px;
+            margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            font-weight: 300;
+        }
+
+        /* utility */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- tulisan kecil mod menu by ikyy -->
+    <div class="credit-badge">⚡ mod menu by ikyy</div>
+
+    <!-- container login -->
+    <div class="login-wrapper">
+        <div class="glass-card">
+            <div class="brand">
+                <h1>cyber realm</h1>
+                <span>secure access</span>
+            </div>
+
+            <!-- form login sederhana -->
+            <div class="input-group">
+                <label>username</label>
+                <input type="text" id="username" placeholder="• username •" autocomplete="off">
+            </div>
+            <div class="input-group">
+                <label>password</label>
+                <input type="password" id="password" placeholder="• password •">
+            </div>
+
+            <button class="login-btn" id="loginBtn">masuk</button>
+
+            <!-- hint kecil (tes aja) -->
+            <div style="text-align: center; margin-top: 28px; color: rgba(200,180,255,0.25); font-size: 0.75rem; border-top: 1px dashed rgba(255,255,255,0.05); padding-top: 16px;">
+                <span>⋆⁺₊☾ tes bebas ☽₊⁺⋆</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- overlay gelap + loading + pesan baru -->
+    <div class="overlay" id="overlay">
+        <!-- spinner (hanya muncul saat loading) -->
+        <div class="spinner" id="spinner"></div>
+        <!-- pesan device tidak mendukung (muncul setelah spinner) -->
+        <div class="message-box" id="message">
+            <h2>Device kamu<br>tidak mendukung.</h2>
+            <div class="message-sub">silahkan hubungi owner kami<br>atau menunggu updatean berikut</div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const overlay = document.getElementById('overlay');
+            const spinner = document.getElementById('spinner');
+            const message = document.getElementById('message');
+            const loginBtn = document.getElementById('loginBtn');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+
+            // sembunyikan pesan di awal, spinner terlihat nanti
+            message.classList.remove('fade-in'); // pastikan pesan tidak kelihatan
+            spinner.style.display = 'block';   // spinner visible
+            message.style.opacity = '0';        // reset jika ada style inline
+
+            // Event login
+            loginBtn.addEventListener('click', function(e) {
+                e.preventDefault(); // mencegah reload / pengiriman form
+
+                // Bebas validasi, semua bisa login
+
+                // 1. munculkan overlay (aktif)
+                overlay.classList.add('active');
+
+                // 2. pastikan spinner kelihatan, pesan tersembunyi
+                spinner.style.display = 'block';
+                message.classList.remove('fade-in');
+                message.style.opacity = '0';  // ubah langsung untuk redundansi
+
+                // 3. tunggu 3 detik, lalu spinner hilang, pesan fade-in
+                setTimeout(() => {
+                    // sembunyikan spinner
+                    spinner.style.display = 'none';
+
+                    // tampilkan pesan dengan fade-in (class)
+                    message.classList.add('fade-in');
+                    message.style.opacity = '1'; // cadangan
+
+                }, 3000); // 3000ms = 3 detik
+            });
+
+            // sedikit manis: jika user menekan enter di form (opsional)
+            function simulateClick() {
+                loginBtn.click();
+            }
+
+            // biar enter di input trigger login
+            usernameInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    simulateClick();
+                }
+            });
+            passwordInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    simulateClick();
+                }
+            });
+
+            // debug: pastikan state awal
+            console.log('ready · mod menu by ikyy');
+        })();
+    </script>
+
+    <!-- sedikit extra glow untuk efek (optional, hanya menambah atmosfer) -->
+    <div style="position: fixed; bottom: 20px; right: 20px; color: rgba(255,255,255,0.03); font-size: 0.7rem; pointer-events: none; z-index: 0;">
+        ✦ ✦ ✦
+    </div>
+</body>
+</html>
